@@ -14,6 +14,8 @@
 + (id)sharedManager;
 -(CCSprite*) getMyProfilePic;
 -(void) makeRequest;
+-(id) friendsNotInstalled;
+-(id) friendsInstalled;
 
 @property (nonatomic, assign, getter = isAuthenticated) BOOL authenticated;
 

@@ -167,5 +167,61 @@ static FacebookSingleton *sharedManager = nil;
     
 }
 
+-(id) friendsNotInstalled {
+    
+    __block NSString *results;
+    
+    [[FBRequest requestForMe] startWithCompletionHandler: ^(FBRequestConnection *connection,
+                                      NSDictionary<FBGraphUser> *my,
+                                      NSError *error) {
+        
+        FBRequest *fql = [FBRequest requestForGraphPath:@"fql"];
+        [fql.parameters setObject:
+         [NSString stringWithFormat:@"SELECT name,uid, pic_small FROM user WHERE is_app_user = 0 AND uid IN (SELECT uid2 FROM friend WHERE uid1 = %@) order by concat(first_name,last_name) asc",my.id]
+                           forKey:@"q"];
+        
+        [fql startWithCompletionHandler:^(FBRequestConnection *connection,
+                                          id result,
+                                          NSError *error) {
+            if (result) {
+                NSLog(@"result:%@", result);
+                results = result;
+            }
+        }];
+        
+    }];
+    
+    return results;
+    
+}
+
+-(id) friendsInstalled {
+    
+    __block NSString *results;
+    
+    [[FBRequest requestForMe] startWithCompletionHandler: ^(FBRequestConnection *connection,
+                                                            NSDictionary<FBGraphUser> *my,
+                                                            NSError *error) {
+        
+        FBRequest *fql = [FBRequest requestForGraphPath:@"fql"];
+        [fql.parameters setObject:
+         [NSString stringWithFormat:@"SELECT name,uid, pic_small FROM user WHERE is_app_user = 1 AND uid IN (SELECT uid2 FROM friend WHERE uid1 = %@) order by concat(first_name,last_name) asc",my.id]
+                           forKey:@"q"];
+        
+        [fql startWithCompletionHandler:^(FBRequestConnection *connection,
+                                          id result,
+                                          NSError *error) {
+            if (result) {
+                NSLog(@"result:%@", result);
+                results = result;
+            }
+        }];
+        
+    }];
+    
+    return results;
+    
+}
+
 
 @end
