@@ -142,10 +142,13 @@ NSString *const kFBAppBridgeImageSupportVersion = @"20130410";
 
 - (NSString *)appBridgeVersion
 {
+#if DEBUG
     NSString *imgSupportVersion = [FBAppBridge installedFBNativeAppVersionForMethod:@"ogshare"
                                                                          minVersion:kFBAppBridgeImageSupportVersion];
     if (!imgSupportVersion) {
         NSString *minVersion = [FBAppBridge installedFBNativeAppVersionForMethod:@"ogshare" minVersion:kFBAppBridgeMinVersion];
+        
+        
         if ([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog] && minVersion) {
             if ([self containsUIImages:self.action]) {
                 [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
@@ -154,9 +157,13 @@ NSString *const kFBAppBridgeImageSupportVersion = @"20130410";
             }
             return minVersion;
         }
+        
         return nil;
     }
     return imgSupportVersion;
+#endif
+    
+    return nil;
 }
 
 - (BOOL)containsUIImages:(id)param

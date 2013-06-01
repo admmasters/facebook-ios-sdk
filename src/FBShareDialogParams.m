@@ -127,6 +127,9 @@ static NSString *const kFBShareDialogProdVersion = @"20130410";
         return nil;
     }
     
+#if DEBUG
+
+    
     NSString *prodVersion = [FBAppBridge installedFBNativeAppVersionForMethod:@"share"
                                                                    minVersion:kFBShareDialogProdVersion];
     if (!prodVersion) {
@@ -136,6 +139,10 @@ static NSString *const kFBShareDialogProdVersion = @"20130410";
         return [FBAppBridge installedFBNativeAppVersionForMethod:@"share" minVersion:kFBShareDialogBetaVersion];
     }
     return prodVersion;
+    
+#endif
+    
+    return nil;
 }
 
 @end
